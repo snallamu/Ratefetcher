@@ -75,9 +75,15 @@ def render_source(title, per10g_24k, chg10g, pct, cur, premium, note=None):
         v = base * f
         c = None if chg10g is None else chg10g * f * (1 + premium / 100)
         col.metric(f"{k} · per 10g", money(v, cur), delta(c, pct, cur))
-        o = money(((v / 10) * 8), cur)
-        rows.append({"Karat": k, "Per gram": money(v / 10, cur),"Per 8g": o, "Per 10g": money(v, cur),
-                     "Per oz (31.1g)": money(v / 10 * OZ_G, cur)})
+        
+        per_1g = v / 10
+        rows.append({
+            "Karat": k,
+            "Per gram": money(per_1g, cur),
+            "Per 8g": money(per_1g * 8, cur),
+            "Per 10g": money(v, cur),
+            "Per oz (31.1g)": money(per_1g * OZ_G, cur),
+        })
     st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
     if note:
         st.caption(note)
